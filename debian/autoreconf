@@ -1,0 +1,19 @@
+#!/bin/sh
+set -C -e -u
+
+# Tell dh-autoreconf where to search, instead of ./ or -Dsrc/.
+
+# Exclude zlib, which fails (binutils/2.35.2 autoconf/2.71).
+# It is ignored in favor of the Debian package anyway.
+
+# Exclude etc, which contains etc/configure but not its source
+# (since 2.38-1).
+# Seen with 2.41-4 (autoconf/2.69).
+
+# gprofng/libcollector: #1013590 with 2.38.50.20220622-1
+# libtoolize: error: AC_CONFIG_MACRO_DIRS([../../config]) conflicts with ACLOCAL_AMFLAGS=-I ..
+# Seen with 2.41-4 (autoconf/2.69).
+
+echo src
+
+dirname src/*/configure | grep -v -e zlib -e etc -e gprofng

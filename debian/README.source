@@ -1,0 +1,13 @@
+This package follows some of the conventions described at
+https://wiki.debian.org/PackagingLessCommonBinutilsTargets
+
+When the package rebuilds successfully against latest binutils-source,
+feel free to proceed to a Non-Maintainer Upload without prior
+permission.  For any other change, please follow the usual procedure.
+
+The binary version is constructed by debian/rules from:
+* the version of binutils-source used at build time,
+  also copied to the Built-Using control field.
+* the source version, copied from last changelog entry.
+
+ -- Nicolas Boulenguez <nicolas@debian.org>, Sun, 14 Mar 2021 21:27:44 +0100

@@ -1,0 +1,3 @@
+Tests: basic
+Depends: @, file
+Restrictions: superficial

@@ -1,0 +1,25 @@
+#!/bin/sh
+set -C -e -f -u
+
+gnu_type=$(sed -n '/^gnu_type *= */{s///p;q}' debian/rules)
+echo "Target GNU type: $gnu_type"
+
+cd "$AUTOPKGTEST_TMP"
+
+echo 'Running as'
+$gnu_type-as /dev/null
+
+echo 'Checking that file says "ELF" and "not stripped"'
+expr match "$(file -b a.out)" 'ELF .*, not stripped'
+
+echo 'Running nm'
+$gnu_type-nm a.out
+
+echo 'Running strings'
+$gnu_type-strings a.out
+
+echo 'Running strip'
+$gnu_type-strip a.out
+
+echo 'Checking that file says "ELF" and "stripped"'
+expr match "$(file -b a.out)" 'ELF .*, stripped'

@@ -1,0 +1,6 @@
+# A separate debian/clean file is more convenient than an override, as
+# it runs after dh_update_autotools_config, which looks for its
+# temporary files in src/.
+
+bld/
+src/

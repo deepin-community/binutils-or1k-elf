@@ -1,5 +1,100 @@
-template-repository (1.0-1) unstable; urgency=medium
+binutils-or1k-elf (1.0.10) unstable; urgency=medium
 
-  * Initial release
+  * Rebuild against binutils 2.41.
+  * Remove applied patches. Closes: #1058556.
 
- -- Tsic404 <liuheng@deepin.org>  Sat, 28 Jan 2023 13:46:49 +0800
+ -- Nicolas Boulenguez <nicolas@debian.org>  Fri, 15 Dec 2023 22:16:45 +0000
+
+binutils-or1k-elf (1.0.9) unstable; urgency=medium
+
+  * improve extraction of upstream sources.
+  * Install to debian/tmp, add explicit debian/install, not-installed.
+  * Drive dh_links with a shell script (instead of Make).
+  * Add missing CPPFLAGS, fix two typos
+
+ -- Nicolas Boulenguez <nicolas@debian.org>  Tue, 29 Aug 2023 11:21:27 +0000
+
+binutils-or1k-elf (1.0.8) unstable; urgency=medium
+
+  * Rebuild against binutils 2.40.
+  * Let dh-builtusing generate the Built-Using field.
+
+ -- Nicolas Boulenguez <nicolas@debian.org>  Sun, 27 Aug 2023 16:28:29 +0000
+
+binutils-or1k-elf (1.0.7) unstable; urgency=medium
+
+  * Autoreconf libiberty again (fixed in 2.39.50).
+  * Standards-Version: 4.6.2 (no changes).
+  * Update format of lintian overrides.
+  * Update copyright years.
+
+  [ Eric Long ]
+  * Remove mbstowcs patch (applied in 2.39.50). Closes: #1026442.
+
+ -- Nicolas Boulenguez <nicolas@debian.org>  Wed, 21 Dec 2022 00:17:44 +0000
+
+binutils-or1k-elf (1.0.6) unstable; urgency=medium
+
+  * In gas, call mbstowcs with len=0 when dest=NULL.  Closes: #1016223.
+
+ -- Nicolas Boulenguez <nicolas@debian.org>  Thu, 04 Aug 2022 07:46:42 +0000
+
+binutils-or1k-elf (1.0.5) unstable; urgency=medium
+
+  * Disable build-time tests.
+
+ -- Nicolas Boulenguez <nicolas@debian.org>  Mon, 27 Jun 2022 06:37:13 +0000
+
+binutils-or1k-elf (1.0.4) unstable; urgency=medium
+
+  * Do not autoreconf gprofng. Closes: #1013590.
+
+ -- Nicolas Boulenguez <nicolas@debian.org>  Sat, 25 Jun 2022 15:42:50 +0000
+
+binutils-or1k-elf (1.0.3) unstable; urgency=medium
+
+  * Do not autoreconf in etc/. Closes: #1005669.
+
+ -- Nicolas Boulenguez <nicolas@debian.org>  Sun, 06 Mar 2022 14:08:57 +0000
+
+binutils-or1k-elf (1.0.2) unstable; urgency=medium
+
+  [ Vagrant Cascadian ]
+  * Enable deterministic archives. Closes: #996184.
+
+  [ Nicolas Boulenguez ]
+  * autopkgtests: test strip, report progress.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 04 Nov 2021 01:37:48 +0100
+
+binutils-or1k-elf (1.0.1) unstable; urgency=medium
+
+  * Reupload to unstable.
+
+  [ Nicolas Boulenguez ]
+  * Use upstream build system directly instead of via the binutils
+    packaging intended for Debian architectures.
+    The tools are now linked statically.
+  * Enable dh_autoreconf (2.69) (except for libiberty).
+  * Pass usual dh_auto_configure options.
+    Especially, dependency tracking seems incompatible with autoconf2.71.
+  * Enable post-build checks.
+  * Refine patterns in lintian overrides.
+
+  [ John Scott ]
+  * Update_autotools_config after extraction (it was a no-op).
+  * Allow the binary package to satisfy Multi-Arch: foreign dependencies.
+  * Put binutils *source* version in Built-Using (it may differ for NMUs).
+
+  [ Jonas Smedegaard ]
+  * create empty src dir before dh_auto_clean,
+    to avoid confusing debhelper
+  * fix my email address in Uploaders field
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 06 Sep 2021 14:36:43 +0200
+
+binutils-or1k-elf (1) experimental; urgency=medium
+
+  * Initial release. Closes: #982892.
+
+ -- Nicolas Boulenguez <nicolas@debian.org>  Sun, 10 Jan 2021 12:12:28 +0000

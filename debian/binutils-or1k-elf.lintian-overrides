@@ -1,0 +1,4 @@
+# Traditional location of cross compiler tools.
+# Hard links in upstream, replaced with symbolic links in Debian.
+non-standard-dir-in-usr [usr/or1k-elf/]
+file-in-unusual-dir [usr/or1k-elf/bin/*]

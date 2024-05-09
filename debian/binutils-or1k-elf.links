@@ -1,0 +1,21 @@
+#!/bin/sh
+set -C -e -u
+
+gnu_type=or1k-elf
+
+# For each executable in the path, provide a manual page as a symbolic
+# link to the one from binutils-common.
+mandir=usr/share/man/man1
+for executable in debian/tmp/usr/bin/$gnu_type-*; do
+    tool=${executable##*-}
+    echo $mandir/$tool.1.gz $mandir/$gnu_type-$tool.1.gz
+done
+
+# Upstream installs hard links to some executables from the
+# traditional path for cross-compiler tools.
+# Instead of copying them from debian/tmp to the package directory,
+# replace them with symbolic links.
+for hard_link in debian/tmp/usr/$gnu_type/bin/*; do
+    tool=${hard_link##*/}
+    echo usr/bin/$gnu_type-$tool usr/$gnu_type/bin/$tool
+done

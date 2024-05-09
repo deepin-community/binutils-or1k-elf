@@ -1,0 +1,7 @@
+# Shared data are provided by the binutils-common dependency.
+usr/share/info/*.info
+# usr/share/locale/ is disabled during configuration.
+usr/share/man/man1/*.1
+
+# Replaced with symbolic links in Debian.
+usr/or1k-elf/bin/*

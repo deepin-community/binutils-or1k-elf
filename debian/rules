@@ -1,4 +1,74 @@
 #!/usr/bin/make -f
 
+# https://wiki.debian.org/PackagingLessCommonBinutilsTargets
+
+include /usr/share/dpkg/architecture.mk
+include /usr/share/dpkg/pkg-info.mk
+
+export DEB_BUILD_MAINT_OPTIONS := hardening=+all
+
+# The GNU triplet determines Debian package names, but not the other
+# way around because GNU triplets may contain underscore characters.
+gnu_type                                 = or1k-elf
+
+# Extract sources to a fixed path (computing the version is
+# inefficient, mentioning it everywhere does not help readability, and
+# there will never be other versions here anyway).
+
+# Note for the build directory: build is the name of a Debian phony
+# target, an existing directory with the same name would confuse Make.
+
 %:
-	dh $@
+	dh $@ -Dsrc -Bbld
+
+# Reduce the dependency on upstream naming scheme with wildcards.
+tar_dir = /usr/src/binutils
+execute_before_dh_update_autotools_config: src
+src:
+	tar -xf $(tar_dir)/binutils-*.tar.xz --transform='s|[^/]*|src|'
+  # Apply patches here with 'patch -dsrc -p1 < $patch'.
+
+# _GCC_AUTOCONF_VERSION_CHECK in config/override.m4 requires 2.69.
+override_dh_autoreconf:
+	dh_autoreconf -D. autoreconf2.69 -- -f -i -v `debian/autoreconf`
+
+confargs += --target=$(gnu_type)
+
+# The private libraries in this package do not conform to the
+# multiarch policy, and should avoid multiarch paths.
+confargs += --libdir=/usr/lib/$(gnu_type)
+
+# Link with packaged libz-dev.
+confargs += --with-system-zlib
+
+# Let the executables report the Debian version.
+pkgversion != dpkg-query -Wf'$${Version}' binutils-source
+confargs += --with-pkgversion='$(pkgversion)+$(DEB_VERSION)'
+
+confargs += --disable-nls
+
+# https://tests.reproducible-builds.org/debian/issues/unstable/timestamps_in_static_libraries_issue.html
+confargs += --enable-deterministic-archives
+
+override_dh_auto_configure:
+  # Imitate dh_auto_configure -- $(confargs), but without
+  # --runstatedir as long as libiberty/configure cannot be refreshed.
+	install -d bld
+	cd bld && ../src/configure --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --includedir=/usr/include --mandir=/usr/share/man --infodir=/usr/share/info --sysconfdir=/etc --localstatedir=/var --disable-option-checking --disable-silent-rules --libdir=/usr/lib/$(DEB_HOST_GNU_TYPE) --disable-maintainer-mode --disable-dependency-tracking \
+	$(confargs)
+
+# Disable tests, until someone fixes
+# https://buildd.debian.org/status/fetch.php?pkg=binutils-or1k-elf&arch=mips64el&ver=1.0.4&stamp=1656249446&raw=0
+override_dh_auto_test:
+
+# Install in two steps even if building one package.
+# This will become the default in debhelper compatility level 15.
+override_dh_auto_install:
+	dh_auto_install --destdir=debian/tmp
+
+override_dh_gencontrol:
+	dh_gencontrol -- '-v$(pkgversion)+$(DEB_VERSION)'
+
+# avoid debhelper confusion when source directory is initially missing
+execute_before_dh_auto_clean:
+	mkdir --parents src
